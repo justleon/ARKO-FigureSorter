@@ -1,7 +1,8 @@
-# ARKO-MIPS
-Sortowanie figur w języku assemblera do użytku w symulatorze MARS.  
+# [PL]ARKO-FigureSorter
+Sortowanie figur w języku assemblera do użytku w symulatorze MARS oraz program C++ z funkcją assemblerową INTELa.  
 Powyzszy program pobiera dane z 32-bitowego pliku BMP w postaci headera i tablicy pikseli.  
-Na podstawie tablicy pikseli znajduje figury oraz oblicza ich obwody. Następnie zgodnie z zebranymi danymi ustawia figury w kolejności od najmniejszego obwodu, do największego i zapisuje wynik w nowym pliku BMP o tych samych wymiarach.  
+Na podstawie tablicy pikseli znajduje figury oraz oblicza ich obwody. Następnie zgodnie z zebranymi danymi ustawia figury w kolejności od najmniejszego obwodu, do największego i zapisuje wynik w nowym pliku BMP o tych samych wymiarach.
+UWAGA: Wersja na MIPS korzysta z plików 32bitowych z kanałem alpha i schematem kolorów, program C++ natomiast z plików 32bitowych BEZ kanału alpha i schematu kolorów.  
 
 **Ograniczenia:**  
 * w pliku wejściowym powinno znaleźć sie maksymalnie 5 figur
