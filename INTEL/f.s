@@ -29,7 +29,8 @@ f:
 	push rbp
 	mov rbp, rsp
 
-	sub rsp, 140
+	sub rsp, 148
+	mov QWORD [rbp - 148], rdi
 	lea r11, [rbp - 40]
 	mov r12, rdi
 	mov r13, rsi
@@ -58,7 +59,6 @@ findNextPixel:
     jmp createOutputImage
 
 setup:
-    mov ebx, 0
     mov r8d, DWORD [rbp - 8]
     mov DWORD [rbp - 12], r8d
     mov DWORD [rbp - 16], 0
@@ -69,7 +69,6 @@ setup:
     inc DWORD [r12]
 
 goRight:
-    mov ebx, 0
     add r12, 4
     inc DWORD [rbp - 4]
     cmp QWORD [rbp - 32], r12
@@ -81,9 +80,11 @@ goRight:
     dec DWORD [rbp - 4]
     jmp goUp
 cRight:
+    mov rdi, r14
+    mov rsi, r12
     call checkPixels
 
-    cmp ebx, 1
+    cmp eax, 1
     je goDown
 cRightFin:
     inc DWORD [r12]
@@ -97,7 +98,6 @@ cRightFin:
     jmp goRight
 
 goUp:
-    mov ebx, 0
     mov r8, r14
     sal r8, 2
     add r12, r8
@@ -111,8 +111,11 @@ goUp:
     dec DWORD [rbp - 8]
     jmp goLeft
 cUp:
+    mov rdi, r14
+    mov rsi, r12
     call checkPixels
-    cmp ebx, 1
+
+    cmp eax, 1
     je goRight
 cUpFin:
     inc DWORD [r12]
@@ -126,7 +129,6 @@ cUpFin:
     jmp goUp
 
 goLeft:
-    mov ebx, 0
     sub r12, 4
     dec DWORD [rbp - 4]
     cmp QWORD [rbp - 32], r12
@@ -138,8 +140,11 @@ goLeft:
     inc DWORD [rbp - 4]
     jmp goDown
 cLeft:
+    mov rdi, r14
+    mov rsi, r12
     call checkPixels
-    cmp ebx, 1
+
+    cmp eax, 1
     je goUp
 cLeftFin:
     inc DWORD [r12]
@@ -153,7 +158,6 @@ cLeftFin:
     jmp goLeft
 
 goDown:
-    mov ebx, 0
     mov r8, r14
     sal r8, 2
     sub r12, r8
@@ -167,9 +171,11 @@ goDown:
     inc DWORD [rbp - 8]
     jmp goRight
 cDown:
+    mov rdi, r14
+    mov rsi, r12
     call checkPixels
 
-    cmp ebx, 1
+    cmp eax, 1
     je goLeft
 cDownFin:
     inc DWORD [r12]
@@ -181,30 +187,35 @@ cDownFin:
 checkPixels:
     push rbp
     mov rbp, rsp
+    sub rsp, 12
+    mov DWORD [rbp - 4], edi
+    mov QWORD [rbp - 12], rsi
 
-    mov r8, r14
+    mov r8d, DWORD [rbp - 4]
+    mov r9, QWORD [rbp - 12]
     sal r8, 2
-    add r12, r8
-    mov eax, DWORD [r12]
-    sub r12, r8
+    add r9, r8
+    mov eax, DWORD [r9]
+    sub r9, r8
     cmp eax, 0xffffffff
     je  checkFin
-    add r12, 4
-    mov eax, DWORD [r12]
-    sub r12, 4
+    add r9, 4
+    mov eax, DWORD [r9]
+    sub r9, 4
     cmp eax, 0xffffffff
     je  checkFin
-    sub r12, r8
-    mov eax, DWORD [r12]
-    add r12, r8
+    sub r9, r8
+    mov eax, DWORD [r9]
+    add r9, r8
     cmp eax, 0xffffffff
     je  checkFin
-    sub r12, 4
-    mov eax, DWORD [r12]
-    add r12, 4
+    sub r9, 4
+    mov eax, DWORD [r9]
+    add r9, 4
     cmp eax, 0xffffffff
     je  checkFin
-    inc ebx
+
+    mov eax, 1
 checkFin:
     nop
     leave
@@ -223,7 +234,7 @@ saveFigure:
     mov eax, [rbp - 24]
     sal eax, 2
     add r8, rax
-    add r8, rdi
+    add r8, QWORD [rbp - 148]
     mov QWORD [r11 - 12], r8
 
     mov r8, 0
@@ -242,7 +253,6 @@ saveFigure:
     mov DWORD [rbp - 24], 0
     mov DWORD [rbp - 32], 0
     mov DWORD [rbp - 36], 0
-    mov rbx, 0
 
     sub r11, 20
     lea r8, [rbp - 140]
@@ -325,4 +335,3 @@ end:
 	mov rsp, rbp
 	pop rbp
 	ret
-
